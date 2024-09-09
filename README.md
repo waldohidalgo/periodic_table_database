@@ -4,11 +4,22 @@ Repositorio con los archivos necesarios para aprobar el [proyecto requisito obli
 
 ## Tabla de Contenidos
 
+- [Build a Periodic Table Database](#build-a-periodic-table-database)
+  - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [Instrucciones y All tests passed](#instrucciones-y-all-tests-passed)
+  - [Proyecto Aprobado](#proyecto-aprobado)
+  - [Script Bash](#script-bash)
+  - [Comandos SQL](#comandos-sql)
+
 ## Instrucciones y All tests passed
 
 ![All tests passed](./screenshots/all_passed.webp)
 
-## Script
+## Proyecto Aprobado
+
+![Screenshot Proyecto Aprobado](/screenshots/passed.png)
+
+## Script Bash
 
 ```bash
 #!/bin/bash
@@ -62,5 +73,71 @@ RUN() {
     fi
 }
 RUN $1
+
+```
+
+## Comandos SQL
+
+```sql
+
+ALTER TABLE properties RENAME COLUMN weight TO atomic_mass;
+
+ALTER TABLE properties RENAME COLUMN melting_point TO melting_point_celsius;
+
+ALTER TABLE properties RENAME COLUMN boiling_point TO boiling_point_celsius;
+
+ALTER TABLE properties ALTER COLUMN melting_point_celsius SET NOT NULL;
+
+ALTER TABLE properties ALTER COLUMN boiling_point_celsius SET NOT NULL;
+
+ALTER TABLE elements ADD CONSTRAINT elements_symbol_key UNIQUE (symbol);
+
+ALTER TABLE elements ADD CONSTRAINT elements_name_key UNIQUE (name);
+
+ALTER TABLE elements ALTER COLUMN symbol SET NOT NULL;
+
+ALTER TABLE elements ALTER COLUMN name SET NOT NULL;
+
+ALTER TABLE properties ADD CONSTRAINT properties_atomic_number_fkey FOREIGN KEY (atomic_number) REFERENCES elements (atomic_number);
+
+CREATE TABLE types (type_id SERIAL PRIMARY KEY, type VARCHAR NOT NULL);
+
+INSERT INTO types (type) VALUES ('metal'), ('nonmetal'), ('metalloid');
+
+/*
+Crear columna type_id
+*/
+
+ALTER TABLE properties ADD COLUMN type_id INT;
+
+UPDATE properties SET type_id = (SELECT type_id FROM types WHERE types.type = properties.type);
+
+ALTER TABLE properties ADD CONSTRAINT fkey_properties_type_id FOREIGN KEY (type_id) REFERENCES types (type_id);
+
+ALTER TABLE properties ALTER COLUMN type_id SET NOT NULL;
+
+UPDATE elements SET symbol=INITCAP(symbol);
+
+/*
+Cambiar tipo de dato numeric(9,6) a solo numeric
+*/
+
+ALTER TABLE properties ALTER COLUMN atomic_mass TYPE decimal;
+
+DELETE FROM properties WHERE atomic_number=1000;
+
+DELETE FROM elements WHERE atomic_number=1000;
+
+ALTER TABLE properties DROP COLUMN type;
+
+INSERT INTO elements (atomic_number,name, symbol) VALUES (9,'Fluorine', 'F');
+
+INSERT INTO properties (atomic_number, atomic_mass, melting_point_celsius, boiling_point_celsius, type_id) VALUES (9, 18.998, -220, -188.1, 2);
+
+INSERT INTO elements (atomic_number,name, symbol) VALUES (10,'Neon', 'Ne');
+
+INSERT INTO properties (atomic_number, atomic_mass, melting_point_celsius, boiling_point_celsius, type_id) VALUES (10, 20.18, -248.6, -246.1, 2);
+
+SELECT atomic_number,name,symbol,type,atomic_mass,melting_point_celsius,boiling_point_celsius FROM elements INNER JOIN properties USING(atomic_number) INNER JOIN types USING(type_id) ORDER BY atomic_number;
 
 ```
