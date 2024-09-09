@@ -32,9 +32,8 @@ SHOW_DATA() {
 
 RUN() {
 
-    echo "Please provide an element as an argument."
     if [[ -z $1 ]]; then
-        NOT_FOUND
+        echo "Please provide an element as an argument."
     else
         if [[ $1 =~ ^[0-9]+$ ]]; then
             SHOW_DATA "atomic_number" $1
