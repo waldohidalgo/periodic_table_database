@@ -1,3 +1,16 @@
+# Build a Periodic Table Database
+
+Repositorio con los archivos necesarios para aprobar el [proyecto requisito obligatorio número 4](https://www.freecodecamp.org/learn/relational-database/build-a-periodic-table-database-project/build-a-periodic-table-database). Proyecto para obtener la [Relational Database Certification](https://www.freecodecamp.org/learn/relational-database/) de freecodecamp
+
+## Tabla de Contenidos
+
+## Instrucciones y All tests passed
+
+![All tests passed](./screenshots/all_passed.webp)
+
+## Script
+
+```bash
 #!/bin/bash
 
 PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
@@ -49,3 +62,5 @@ RUN() {
     fi
 }
 RUN $1
+
+```
